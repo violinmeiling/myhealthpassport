@@ -1,9 +1,10 @@
 {
   "files": {
-    "main.js": "/myhealthpassport/static/js/main.31d6cfe0.js",
-    "index.html": "/myhealthpassport/index.html"
+    "main.js": "/myhealthpassport/static/js/main.c2424a6d.js",
+    "index.html": "/myhealthpassport/index.html",
+    "main.c2424a6d.js.map": "/myhealthpassport/static/js/main.c2424a6d.js.map"
   },
   "entrypoints": [
-    "static/js/main.31d6cfe0.js"
+    "static/js/main.c2424a6d.js"
   ]
 }
