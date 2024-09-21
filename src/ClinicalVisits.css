@@ -1,0 +1,56 @@
+/* src/ClinicalVisits.css */
+.clinical-visits {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .left-panel {
+    width: 20%;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+  }
+  
+  .right-panel {
+    width: 80%;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  input[type="text"] {
+    width: 93.7%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  
+  .visit-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .visit-box {
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .visit-box:hover {
+    background-color: #eaeaea;
+  }
+  
+  .visit-details {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+  }
+  
+  .visit-placeholder {
+    color: #888;
+    font-size: 18px;
+  }
+  
