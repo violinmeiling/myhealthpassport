@@ -85,7 +85,7 @@ class PastMedicalTest(EmbeddedDocument):
 
 # Main User Document
 class User(Document):
-    user_id = fields.StringField(required=True, unique=True)
+    user_id = fields.StringField(required=True, default=lambda: str(uuid.uuid4()))  # Auto-generate ID
     name = fields.StringField(required=True)
     dob = fields.DateTimeField(required=True)
     height = fields.StringField()

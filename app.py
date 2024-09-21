@@ -98,107 +98,293 @@ def update_user_by_id(user_id):
 @app.route("/users/<user_id>/visit_summary", methods=["POST"])
 def add_visit_summary_to_user(user_id):
     try:
-        # Get the JSON data from the request
         data = request.get_json()
-
-        # Find the user by user_id
         user = User.objects.get(user_id=user_id)
 
-        # Helper function to find or create medications
-        def find_or_create_medications(medication_data_list):
-            medications = []
-            for med_data in medication_data_list:
-                # Check if medication already exists
-                for med in user.medications:
-                    if med.medication_id == med_data["medication_id"]:
-                        med.num_references += 1
-                        medications.append(med)
-                        break
-                else:
-                    # Medication doesn't exist, create a new one
-                    new_medication = Medication(
-                        medication_id=med_data["medication_id"],
-                        medication_name=med_data["medication_name"],
-                        intended_use=med_data["intended_use"],
-                        dosage=med_data["dosage"],
-                        frequency=med_data["frequency"],
-                        duration=med_data["duration"],
-                        num_references=1
-                    )
-                    user.medications.append(new_medication)
-                    medications.append(new_medication)
-            return medications
-
-        # Helper function to find or create diagnoses
-        def find_or_create_diagnoses(diagnosis_data_list):
-            diagnoses = []
-            for diag_data in diagnosis_data_list:
-                for diag in user.diagnoses:
-                    if diag.diagnosis_id == diag_data["diagnosis_id"]:
-                        diag.num_references += 1
-                        diagnoses.append(diag)
-                        break
-                else:
-                    # Diagnosis doesn't exist, create a new one
-                    new_diagnosis = Diagnosis(
-                        diagnosis_id=diag_data["diagnosis_id"],
-                        date=diag_data["date"],
-                        time=diag_data["time"],
-                        clinic_name=diag_data["clinic_name"],
-                        diagnosis_result=diag_data["diagnosis_result"],
-                        num_references=1
-                    )
-                    user.diagnoses.append(new_diagnosis)
-                    diagnoses.append(new_diagnosis)
-            return diagnoses
-
-        # Helper function to find or create past medical tests
-        def find_or_create_tests(test_data_list):
-            tests = []
-            for test_data in test_data_list:
-                for test in user.past_medical_tests:
-                    if test.test_id == test_data["test_id"]:
-                        test.num_references += 1
-                        tests.append(test)
-                        break
-                else:
-                    # Test doesn't exist, create a new one
-                    new_test = PastMedicalTest(
-                        test_id=test_data["test_id"],
-                        date=test_data["date"],
-                        time=test_data["time"],
-                        clinic_name=test_data["clinic_name"],
-                        test_name=test_data["test_name"],
-                        num_references=1
-                    )
-                    user.past_medical_tests.append(new_test)
-                    tests.append(new_test)
-            return tests
-
-        # Get medications, diagnoses, and tests from request data
-        medications = find_or_create_medications(data.get("medications_prescribed", []))
-        diagnoses = find_or_create_diagnoses(data.get("diagnoses", []))
-        tests = find_or_create_tests(data.get("tests_run", []))
-
-        # Create a new VisitSummary
         visit_summary = VisitSummary(
             visit_summary_id=data.get("visit_summary_id"),
             date=data.get("date"),
             time=data.get("time"),
             clinic_name=data.get("clinic_name"),
-            purpose=data.get("purpose"),
-            medications_prescribed=medications,
-            diagnoses=[diag.diagnosis_id for diag in diagnoses],
-            tests_run=[test.test_id for test in tests]
+            purpose=data.get("purpose")
         )
 
-        # Add the new visit summary to the user's visit summaries
         user.visit_summaries.append(visit_summary)
-
-        # Save the updated user document
         user.save()
 
         return jsonify({"message": "Visit summary added successfully!", "user": user.to_dict()}), 200
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+@app.route("/users/<user_id>/visit_summary", methods=["PUT"])
+def update_visit_summary(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+        visit_summary_id = data["visit_summary_id"]
+        for visit_summary in user.visit_summaries:
+            if visit_summary.visit_summary_id == visit_summary_id:
+                if "date" in data:
+                    visit_summary.date = data["date"]
+                if "time" in data:
+                    visit_summary.time = data["time"]
+                if "clinic_name" in data:
+                    visit_summary.clinic_name = data["clinic_name"]
+                if "purpose" in data:
+                    visit_summary.purpose = data["purpose"]
+                user.save()
+                return jsonify({"message": "Visit summary updated successfully!", "user": user.to_dict()}), 200
+
+        return jsonify({"error": f"No visit summary found with visit_summary_id: {visit_summary_id}"}), 404
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/visit_summary", methods=["DELETE"])
+def delete_visit_summary(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+        visit_summary = None
+        visit_summary_id = data["visit_summary_id"]
+        for v in user.visit_summaries:
+            if v.visit_summary_id == visit_summary_id:
+                visit_summary = v
+                break
+
+        if visit_summary:
+            user.visit_summaries.remove(visit_summary)
+            user.save()
+            return jsonify({"message": "Visit summary deleted successfully!", "user": user.to_dict()}), 200
+        else:
+            return jsonify({"error": f"No visit summary found with visit_summary_id: {visit_summary_id}"}), 404
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/medication", methods=["POST"])
+def add_medication_to_user(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+
+        medication = Medication(
+            medication_name=data.get("medication_name"),
+            intended_use=data.get("intended_use"),
+            dosage=data.get("dosage"),
+            frequency=data.get("frequency"),
+            duration=data.get("duration")
+        )
+
+        user.medications.append(medication)
+        user.save()
+
+        return jsonify({"message": "Medication added successfully!", "user": user.to_dict()}), 200
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/medication", methods=["PUT"])
+def update_medication(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+        medication_id = data["medication_id"]
+        for medication in user.medications:
+            if medication.medication_id == medication_id:
+                if "medication_name" in data:
+                    medication.medication_name = data["medication_name"]
+                if "intended_use" in data:
+                    medication.intended_use = data["intended_use"]
+                if "dosage" in data:
+                    medication.dosage = data["dosage"]
+                if "frequency" in data:
+                    medication.frequency = data["frequency"]
+                if "duration" in data:
+                    medication.duration = data["duration"]
+                user.save()
+                return jsonify({"message": "Medication updated successfully!", "user": user.to_dict()}), 200
+
+        return jsonify({"error": f"No medication found with medication_id: {medication_id}"}), 404
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/medication", methods=["DELETE"])
+def delete_medication(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+        medication = None
+        medication_id = data["medication_id"]
+        for m in user.medications:
+            if m.medication_id == medication_id:
+                medication = m
+                break
+
+        if medication:
+            user.medications.remove(medication)
+            user.save()
+            return jsonify({"message": "Medication deleted successfully!", "user": user.to_dict()}), 200
+        else:
+            return jsonify({"error": f"No medication found with medication_id: {medication_id}"}), 404
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/diagnosis", methods=["POST"])
+def add_diagnosis_to_user(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+
+        diagnosis = Diagnosis(
+            date=data.get("date"),
+            time=data.get("time"),
+            clinic_name=data.get("clinic_name"),
+            diagnosis_result=data.get("diagnosis_result")
+        )
+
+        user.diagnoses.append(diagnosis)
+        user.save()
+
+        return jsonify({"message": "Diagnosis added successfully!", "user": user.to_dict()}), 200
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/diagnosis", methods=["PUT"])
+def update_diagnosis(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+        diagnosis_id = data["diagnosis_id"]
+        for diagnosis in user.diagnoses:
+            if diagnosis.diagnosis_id == diagnosis_id:
+                if "date" in data:
+                    diagnosis.date = data["date"]
+                if "time" in data:
+                    diagnosis.time = data["time"]
+                if "clinic_name" in data:
+                    diagnosis.clinic_name = data["clinic_name"]
+                if "diagnosis_result" in data:
+                    diagnosis.diagnosis_result = data["diagnosis_result"]
+                user.save()
+                return jsonify({"message": "Diagnosis updated successfully!", "user": user.to_dict()}), 200
+
+        return jsonify({"error": f"No diagnosis found with diagnosis_id: {diagnosis_id}"}), 404
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/diagnosis", methods=["DELETE"])
+def delete_diagnosis(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+        diagnosis = None
+        diagnosis_id = data["diagnosis_id"]
+        for d in user.diagnoses:
+            if d.diagnosis_id == diagnosis_id:
+                diagnosis = d
+                break
+
+        if diagnosis:
+            user.diagnoses.remove(diagnosis)
+            user.save()
+            return jsonify({"message": "Diagnosis deleted successfully!", "user": user.to_dict()}), 200
+        else:
+            return jsonify({"error": f"No diagnosis found with diagnosis_id: {diagnosis_id}"}), 404
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/past_medical_test", methods=["POST"])
+def add_past_medical_test_to_user(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+
+        past_medical_test = PastMedicalTest(
+            date=data.get("date"),
+            time=data.get("time"),
+            clinic_name=data.get("clinic_name"),
+            test_name=data.get("test_name")
+        )
+
+        user.past_medical_tests.append(past_medical_test)
+        user.save()
+
+        return jsonify({"message": "Past medical test added successfully!", "user": user.to_dict()}), 200
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/past_medical_test", methods=["PUT"])
+def update_past_medical_test(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+        test_id = data["test_id"]
+        for test in user.past_medical_tests:
+            if test.test_id == test_id:
+                if "date" in data:
+                    test.date = data["date"]
+                if "time" in data:
+                    test.time = data["time"]
+                if "clinic_name" in data:
+                    test.clinic_name = data["clinic_name"]
+                if "test_name" in data:
+                    test.test_name = data["test_name"]
+                user.save()
+                return jsonify({"message": "Past medical test updated successfully!", "user": user.to_dict()}), 200
+
+        return jsonify({"error": f"No past medical test found with test_id: {test_id}"}), 404
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/users/<user_id>/past_medical_test", methods=["DELETE"])
+def delete_past_medical_test(user_id):
+    try:
+        data = request.get_json()
+        user = User.objects.get(user_id=user_id)
+        test = None
+        test_id = data["test_id"]
+        for t in user.past_medical_tests:
+            if t.test_id == test_id:
+                test = t
+                break
+
+        if test:
+            user.past_medical_tests.remove(test)
+            user.save()
+            return jsonify({"message": "Past medical test deleted successfully!", "user": user.to_dict()}), 200
+        else:
+            return jsonify({"error": f"No past medical test found with test_id: {test_id}"}), 404
 
     except DoesNotExist:
         return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
