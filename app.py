@@ -94,7 +94,7 @@ def update_user_by_id(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
-
+# Route to add a visit summary to a user
 @app.route("/users/<user_id>/visit_summary", methods=["POST"])
 def add_visit_summary_to_user(user_id):
     try:
@@ -119,6 +119,7 @@ def add_visit_summary_to_user(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
+# Route to update a visit summary by ID
 @app.route("/users/<user_id>/visit_summary", methods=["PUT"])
 def update_visit_summary(user_id):
     try:
@@ -144,7 +145,8 @@ def update_visit_summary(user_id):
         return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
-    
+
+# Route to delete a visit summary by ID
 @app.route("/users/<user_id>/visit_summary", methods=["DELETE"])
 def delete_visit_summary(user_id):
     try:
@@ -169,6 +171,7 @@ def delete_visit_summary(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     
+# Route to add a medication to a user
 @app.route("/users/<user_id>/medication", methods=["POST"])
 def add_medication_to_user(user_id):
     try:
@@ -193,6 +196,7 @@ def add_medication_to_user(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     
+# Route to update a medication by ID
 @app.route("/users/<user_id>/medication", methods=["PUT"])
 def update_medication(user_id):
     try:
@@ -220,7 +224,8 @@ def update_medication(user_id):
         return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
-    
+
+# Route to delete a medication by ID
 @app.route("/users/<user_id>/medication", methods=["DELETE"])
 def delete_medication(user_id):
     try:
@@ -245,6 +250,7 @@ def delete_medication(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     
+# Route to add a diagnosis to a user
 @app.route("/users/<user_id>/diagnosis", methods=["POST"])
 def add_diagnosis_to_user(user_id):
     try:
@@ -268,6 +274,7 @@ def add_diagnosis_to_user(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     
+# Route to update a diagnosis by ID
 @app.route("/users/<user_id>/diagnosis", methods=["PUT"])
 def update_diagnosis(user_id):
     try:
@@ -294,6 +301,7 @@ def update_diagnosis(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     
+# Route to delete a diagnosis by ID
 @app.route("/users/<user_id>/diagnosis", methods=["DELETE"])
 def delete_diagnosis(user_id):
     try:
@@ -318,6 +326,7 @@ def delete_diagnosis(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     
+# Route to add a past medical test to a user
 @app.route("/users/<user_id>/past_medical_test", methods=["POST"])
 def add_past_medical_test_to_user(user_id):
     try:
@@ -341,6 +350,7 @@ def add_past_medical_test_to_user(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     
+# Route to update a past medical test by ID
 @app.route("/users/<user_id>/past_medical_test", methods=["PUT"])
 def update_past_medical_test(user_id):
     try:
@@ -367,6 +377,7 @@ def update_past_medical_test(user_id):
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     
+# Route to delete a past medical test by ID
 @app.route("/users/<user_id>/past_medical_test", methods=["DELETE"])
 def delete_past_medical_test(user_id):
     try:
