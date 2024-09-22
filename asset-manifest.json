@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/myhealthpassport/static/js/main.eda2bd47.js",
-    "index.html": "/myhealthpassport/index.html",
-    "main.eda2bd47.js.map": "/myhealthpassport/static/js/main.eda2bd47.js.map"
+    "main.js": "3000/static/js/main.eda2bd47.js",
+    "index.html": "3000/index.html",
+    "main.eda2bd47.js.map": "3000/static/js/main.eda2bd47.js.map"
   },
   "entrypoints": [
     "static/js/main.eda2bd47.js"
