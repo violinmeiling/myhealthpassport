@@ -12,8 +12,6 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
-#app.config['MONGO_URI'] = "mongodb+srv://minghan:minghan23@healthpassport.wdswq.mongodb.net/?retryWrites=true&w=majority&appName=healthpassport"
-#app.config['MONGO_URI'] = "mongodb://localhost:27017/healthpassport"
 app.config['MONGO_URI'] = "mongodb+srv://violinmeiling:mathur@healthpassport.wdswq.mongodb.net/?retryWrites=true&w=majority&appName=healthpassport"
 # Create a new client and connect to the server
 connect(db="healthpassport", host=app.config['MONGO_URI'])
@@ -33,13 +31,10 @@ def get_user_by_id():
         user = User.objects.get(user_id=userid)
         return jsonify(user.to_dict()), 200
     except DoesNotExist:
-        return jsonify({"error": f"No user found with user_id: {userid}"}), 404
+        api_create_user(userid)
+        return jsonify("created new user")
 
-# Route to create a new user
-@app.route("/createuser")
-def api_create_user():
-    userid = request.args.get('userid')
-    name = request.args.get('name')
+def api_create_user(userid):
     #data = request.json  # Get JSON data from the request
     # Check for required fields
     #if not all(k in data for k in ("user_id", "name", "dob")):
@@ -48,11 +43,11 @@ def api_create_user():
         # Create a new User object
         user = User(
             user_id=userid,
-            name=name,
+            name="",
             dob="1900-01-01",  # Ensure dob is a valid date in the correct format (YYYY-MM-DD)
             height="",
             weight="",
-            sex="Other",
+            sex="",
             address="",
             insurance_provider="",
             insurance_policy_number="",
@@ -114,6 +109,59 @@ def update_user_by_id():
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
+# Route to add a medication to a user
+@app.route("/addmedication")
+def add_medication_to_user():
+    try:
+        userid = request.args.get('userid')
+        medname = request.args.get('medname') 
+        intendeduse = request.args.get('use') 
+        dosage = request.args.get('dosage') 
+        frequency = request.args.get('frequency') 
+        duration = request.args.get('duration') 
+        user = User.objects.get(user_id=userid)
+
+        medication = Medication(
+            medication_name=medname,
+            intended_use=intendeduse,
+            dosage=dosage,
+            frequency=frequency,
+            duration=duration
+        )
+
+        user.medications.append(medication)
+        user.save()
+
+        return jsonify({"message": "Medication added successfully!", "user": user.to_dict()}), 200
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {userid}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+# Route to delete a medication by ID
+@app.route("/deletemedication")
+def delete_medication():
+    try:
+        userid = request.args.get('userid')
+        medication_id = request.args.get('medid') 
+        user = User.objects.get(user_id=userid)
+        for m in user.medications:
+            if m.medication_id == medication_id:
+                medication = m
+                break
+
+        if medication:
+            user.medications.remove(medication)
+            user.save()
+            return jsonify({"message": "Medication deleted successfully!", "user": user.to_dict()}), 200
+        else:
+            return jsonify({"error": f"No medication found with medication_id: {medication_id}"}), 404
+
+    except DoesNotExist:
+        return jsonify({"error": f"No user found with user_id: {userid}"}), 404
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
     
 if __name__ == "__main__": 
