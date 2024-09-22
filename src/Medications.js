@@ -46,6 +46,8 @@ const Medications = () => {
 
   return (
     <div id="medical-page">
+      <img src="/medicine.png" alt="Insurance" style={{ width: '600px', height: 'auto' }} />
+
       <div className="tabs">
         <button
           className={activeTab === 'medication' ? 'active' : ''}
@@ -60,10 +62,7 @@ const Medications = () => {
           Calendar
         </button>
       </div>
-
-      <div className="tab-content">
-        {renderContent()}
-      </div>
+      <div className="tab-content-med">{renderContent()}</div>
     </div>
   );
 };

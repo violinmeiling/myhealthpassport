@@ -2,12 +2,11 @@
 .tabs {
   display: flex;
   justify-content: flex-start;
-  margin-bottom: 20px;
 }
 
 button {
   padding: 10px 20px;
-  margin-right: 10px;
+  margin-left: 20px;
   border: none;
   cursor: pointer;
   background-color: #f0f0f0;
@@ -19,10 +18,11 @@ button.active {
   color: white;
 }
 
-.tab-content {
-  padding: 20px;
+.tab-content-med {
+  padding: 10px;
   border: 1px solid #ccc;
   background-color: #fff;
+  margin: 20px;
 }
 .medication-view {
   display: flex; /* Ensure left and right panels are side by side */
@@ -47,6 +47,10 @@ button.active {
 input[type="text"] {
   width: 93.7%;
   padding: 10px;
-  margin-bottom: 20px;
   font-size: 16px;
+}
+
+img {
+  display: block; /* This prevents any inline spacing */
+  margin: 0 auto; /* Center the image if needed, remove if not needed */
 }
