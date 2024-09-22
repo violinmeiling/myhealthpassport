@@ -1,22 +1,10 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from fastapi import Depends 
-from propelauth_flask import init_auth, current_user
-from flask import Flask 
-app = Flask(__name__) 
-
-auth = init_auth(
-    "https://96933199.propelauthtest.com",
-    "b795e5abc700f1a3057211d89dd481d2a6bca8f56c0da3002057c3d5bfb1b8f8aa49191e4f842b096fc9f396308b9d87"
-)    
-@app.route("/api/whoami")
-@auth.require_user
-def who_am_i():
-    """This route is protected, current_user is always set"""
-    return {"user_id": current_user.user_id}
-
-if __name__ == "__main__": 
-    app.run(debug=True) 
+from propelauth_flask import init_auth, current_user, TokenVerificationMetadata
+from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
+import json
 
 #mongosh "mongodb+srv://healthpassport.wdswq.mongodb.net/" --apiVersion 1 --username violinmeiling
 
@@ -35,13 +23,15 @@ def createUser(userid, name, dob):
     col = db["users"]
     dict = { "userid": userid, "name": name, "dob": dob }
     col.insert_one(dict)
-    print("Added user " + userid + " with name " + name + " and dob " + dob)
+    return("Added user " + userid + " with name " + name + " and dob " + dob)
 
 def returnUser(userid):
     db = client["healthpassport"]
     col = db["users"]
+    result = []
     for x in col.find({"userid": userid}):
-        print(x)
+        result.append(x)
+    return (json.dumps({"userid": result[0]['userid']}))
 
 def addMedication(userid, medication, strength, frequency, duration, purpose):
     db = client["healthpassport"]
@@ -69,3 +59,24 @@ def getInsurance(userid):
     for x in col.find({"userid": userid}):
         print(x)
 
+app = Flask(__name__) 
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
+
+@app.route("/getmedications")
+@cross_origin(origin='*')
+def getmedications():
+    userid = request.args.get('userid') 
+    return jsonify(retrieveMedications(userid))
+
+@app.route("/checkuserahhh")
+@cross_origin(origin='*')
+def checkuser():
+    userid = request.args.get('userid') 
+    if len(returnUser(userid)) == 0:
+        return jsonify(createUser(userid, "", ""))
+    else:
+        return jsonify(returnUser(userid))
+
+if __name__ == "__main__": 
+    app.run(debug=True)

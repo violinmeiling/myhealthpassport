@@ -87,10 +87,10 @@ class PastMedicalTest(EmbeddedDocument):
 class User(Document):
     user_id = fields.StringField(required=True, unique=True)
     name = fields.StringField(required=True)
-    dob = fields.DateTimeField(required=True)
+    dob = fields.StringField(required=True)
     height = fields.StringField()
     weight = fields.StringField()
-    sex = fields.StringField(choices=["Male", "Female", "Other"])
+    sex = fields.StringField()
     address = fields.StringField()
     insurance_provider = fields.StringField()
     insurance_policy_number = fields.StringField()
