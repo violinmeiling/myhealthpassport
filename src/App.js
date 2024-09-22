@@ -8,6 +8,7 @@ import ClinicalVisits from './ClinicalVisits';
 import Medications from './Medications';
 import Insurance from './Insurance';
 import Profile from './Profile';
+import Login from './Login'; 
 
 function App() {
   return (
