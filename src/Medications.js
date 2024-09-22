@@ -1,54 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from './Calendar';
 import axios from 'axios';
 import './Medications.css';
 
 const API_URL = 'http://localhost:5000';
 
-export const medications = async (userid) => {
-  try {
-    const response = await axios.get(`${API_URL}/getmedications?userid=${userid}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
-};
-
-// Mock data for medication
-// const medications = [
-//   { id: 1, name: 'Tylenol', intended_use: 'Pain reliever', dosage: "1 pill", frequency: 3, duration: 7 },
-//   { id: 2, name: 'Ibuprofen', intended_use: 'Pain reliever', dosage: "1 pill", frequency: 3, duration: 7 },
-//   { id: 3, name: 'Benadryl', intended_use: 'Allergy medicine', dosage: "1 pill", frequency: 3, duration: 7 },
-// ];
-
 const Medications = () => {
   const [activeTab, setActiveTab] = useState('medication');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMedication, setSelectedMedication] = useState(null);
+  const [medications, setMedications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch medications on component mount
+  useEffect(() => {
+    const fetchMedications = async () => {
+      try {
+        const userid = "some_userid"; // Replace with actual user ID
+        const response = await axios.get(`${API_URL}/getmedications?userid=${userid}`);
+        setMedications(response.data); // Assuming response.data contains the list of medications
+        setLoading(false); // Set loading to false once data is fetched
+      } catch (error) {
+        console.error("Error fetching medications:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchMedications();
+  }, []);
 
   const renderContent = () => {
-    switch (activeTab) {
-      case 'medication':
-        return <AllMedication 
-          searchQuery={searchQuery} 
-          setSearchQuery={setSearchQuery} 
-          handleMedicationClick={handleMedicationClick} 
-          selectedMedication={selectedMedication}
-          medications={medications} 
-        />;
-      case 'calendar':
-        return <CalendarView 
-          handleMedicationClick={handleMedicationClick} 
-          medications={medications} 
-        />;
-      default:
-        return <AllMedication 
-          searchQuery={searchQuery} 
-          setSearchQuery={setSearchQuery} 
-          handleMedicationClick={handleMedicationClick} 
-          medications={medications} 
-        />;
+    if (loading) {
+      return <p>Loading medications...</p>; // Show loading indicator while fetching data
     }
+
+    return activeTab === 'medication' ? (
+      <AllMedication 
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery} 
+        handleMedicationClick={handleMedicationClick} 
+        selectedMedication={selectedMedication}
+        medications={medications} 
+      />
+    ) : (
+      <CalendarView 
+        handleMedicationClick={handleMedicationClick} 
+        medications={medications} 
+      />
+    );
   };
 
   const handleMedicationClick = (medication) => {
@@ -74,6 +73,7 @@ const Medications = () => {
           Calendar
         </button>
       </div>
+
       <div className="tab-content-med">{renderContent()}</div>
     </div>
   );
