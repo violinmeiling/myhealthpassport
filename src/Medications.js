@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
-import './Medications.css'; // Optional: Style the tabs
 import Calendar from './Calendar';
+import axios from 'axios';
+import './Medications.css';
+
+const API_URL = 'http://localhost:5000';
+
+export const medications = async (userid) => {
+  try {
+    const response = await axios.get(`${API_URL}/getmedications?userid=${userid}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+};
 
 // Mock data for medication
-const medications = [
-  { id: 1, name: 'Tylenol', intended_use: 'Pain reliever', dosage: "1 pill", frequency: 3, duration: 7 },
-  { id: 2, name: 'Ibuprofen', intended_use: 'Pain reliever', dosage: "1 pill", frequency: 3, duration: 7 },
-  { id: 3, name: 'Benadryl', intended_use: 'Allergy medicine', dosage: "1 pill", frequency: 3, duration: 7 },
-];
+// const medications = [
+//   { id: 1, name: 'Tylenol', intended_use: 'Pain reliever', dosage: "1 pill", frequency: 3, duration: 7 },
+//   { id: 2, name: 'Ibuprofen', intended_use: 'Pain reliever', dosage: "1 pill", frequency: 3, duration: 7 },
+//   { id: 3, name: 'Benadryl', intended_use: 'Allergy medicine', dosage: "1 pill", frequency: 3, duration: 7 },
+// ];
 
 const Medications = () => {
   const [activeTab, setActiveTab] = useState('medication');
@@ -70,7 +82,7 @@ const Medications = () => {
 const AllMedication = ({ searchQuery, setSearchQuery, selectedMedication, handleMedicationClick, medications }) => {
   // Filter medication based on the search query
   const filteredMedication = medications.filter((med) =>
-    med.name.toLowerCase().includes(searchQuery.toLowerCase())
+    med.medication_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -85,8 +97,8 @@ const AllMedication = ({ searchQuery, setSearchQuery, selectedMedication, handle
 
         <div className="medication-list">
           {filteredMedication.map((medication) => (
-            <div key={medication.id} className="medication-box" onClick={() => handleMedicationClick(medication)}>
-              <h3>{medication.name}</h3>
+            <div key={medication.medication_id} className="medication-box" onClick={() => handleMedicationClick(medication)}>
+              <h3>{medication.medication_name}</h3>
             </div>
           ))}
         </div>
@@ -96,7 +108,7 @@ const AllMedication = ({ searchQuery, setSearchQuery, selectedMedication, handle
         {/* Display selected medication details */}
         {selectedMedication ? (
           <div className="medication-details">
-            <h2>{selectedMedication.name}</h2>
+            <h2>{selectedMedication.medication_name}</h2>
             <p>Intended use: {selectedMedication.intended_use}</p>
             <p>Dosage: {selectedMedication.dosage}</p>
             <p>Frequency: {selectedMedication.frequency} times a day</p>

@@ -1,14 +1,25 @@
 // src/ClinicalVisits.js
 import React, { useState } from 'react';
+import axios from 'axios';
 import './ClinicalVisits.css';
 
+const API_URL = 'http://localhost:5000';
+
+export const clinicalVisits = async (userid) => {
+  try {
+    const response = await axios.get(`${API_URL}/checkuserahhh?userid=${userid}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+};
+
 const ClinicalVisits = () => {
-  // Mock data for clinical visits
-  const clinicalVisits = [
-    { id: 1, date: '9/21/2024', clinic_name: 'Swedish Urgent Care', name: 'Visit 3', description: 'Description for Visit 3', details: 'Details about Visit 3...' },
-    { id: 2, date: '9/20/2024', clinic_name: 'ZoomCare', name: 'Visit 2', description: 'Description for Visit 2', details: 'Details about Visit 2...' },
-    { id: 3, date: '9/19/2024', clinic_name: 'Overlake Clinic', name: 'Visit 1', description: 'Description for Visit 1', details: 'Details about Visit 1...' },
-  ];
+  // const clinicalVisits = [
+  //   { id: 1, date: '9/21/2024', clinic_name: 'Swedish Urgent Care', name: 'Visit 3', description: 'Description for Visit 3', details: 'Details about Visit 3...' },
+  //   { id: 2, date: '9/20/2024', clinic_name: 'ZoomCare', name: 'Visit 2', description: 'Description for Visit 2', details: 'Details about Visit 2...' },
+  //   { id: 3, date: '9/19/2024', clinic_name: 'Overlake Clinic', name: 'Visit 1', description: 'Description for Visit 1', details: 'Details about Visit 1...' },
+  // ];
 
   // State for the search query and the selected visit
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,9 +49,9 @@ const ClinicalVisits = () => {
         {/* List of clinical visits */}
         <div className="visit-list">
           {filteredVisits.map((visit) => (
-            <div key={visit.id} className="visit-box" onClick={() => handleVisitClick(visit)}>
+            <div key={visit.visit_summary_id} className="visit-box" onClick={() => handleVisitClick(visit)}>
               <h3>{visit.date + " - " + visit.clinic_name}</h3>
-              <p>{visit.description}</p>
+              <p>{visit.time}</p>
             </div>
           ))}
         </div>
@@ -51,7 +62,8 @@ const ClinicalVisits = () => {
         {selectedVisit ? (
           <div className="visit-details">
             <h2>{selectedVisit.name}</h2>
-            <p>{selectedVisit.details}</p>
+            <p>{"Purpose: " + selectedVisit.purpose}</p>
+
           </div>
         ) : (
           <div className="visit-placeholder">Select a visit to see details.</div>
