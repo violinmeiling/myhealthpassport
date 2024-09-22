@@ -1,0 +1,18 @@
+/* src/Navbar.css */
+.healthpass {
+    background-color: #477bb7; /* Dark background */
+    padding: 0px;
+    display: flex;
+    justify-content: center; /* Center the logo */
+    align-items: center;
+    position: fixed; /* Make the bar fixed at the top */
+    top: 0;
+    width: 100%;
+    z-index: 100;
+  }
+  
+  .healthpass-logo {
+    height: 150px; /* Adjust the height of the logo */
+    max-width: 100%;
+  }
+  
