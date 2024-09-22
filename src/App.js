@@ -1,6 +1,6 @@
 // src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Navbar from './Navbar';
 import Healthpass from './Healthpass';
@@ -19,6 +19,8 @@ function App() {
 
         <div className="tab-content">
           <Routes>
+            <Route path="/" element={<Navigate to="/profile" />} />
+
             <Route path="/clinical-visits" element={<ClinicalVisits />} />
             <Route path="/medications" element={<Medications />} />
             <Route path="/insurance" element={<Insurance />} />
