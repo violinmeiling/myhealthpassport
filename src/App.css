@@ -1,0 +1,42 @@
+/* src/App.css */
+.App {
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #2023b0;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+button:hover {
+  background-color: #1c439d;
+}
+
+.insurance-container {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+  padding: 10px;
+  transition: max-height 0.3s ease; /* Smooth transition */
+}
+
+.insurance-content {
+  max-height: 0; /* Initially collapsed */
+  overflow: hidden; /* Hide overflow */
+  transition: max-height 0.3s ease; /* Smooth transition */
+}
+
+.insurance-content.expanded {
+  max-height: 500px; /* Set a max height that can accommodate the expanded content */
+}
+
