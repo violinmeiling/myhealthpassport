@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/myhealthpassport/static/js/main.ebd6604e.js",
+    "index.html": "/myhealthpassport/index.html",
+    "main.ebd6604e.js.map": "/myhealthpassport/static/js/main.ebd6604e.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.ebd6604e.js"
+  ]
+}
