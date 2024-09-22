@@ -24,3 +24,29 @@ button.active {
   border: 1px solid #ccc;
   background-color: #fff;
 }
+.medication-view {
+  display: flex; /* Ensure left and right panels are side by side */
+  height: 100%; /* Adjust height as needed */
+}
+
+.left-panel {
+  width: 20%;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+}
+
+.right-panel {
+  width: 80%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* Other styles */
+input[type="text"] {
+  width: 93.7%;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}

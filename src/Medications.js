@@ -69,9 +69,9 @@ const AllMedication = () => {
     med.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  <div className="medication-view">
-    <h2>All Medication</h2>
-    <div className="left-panel">
+  return (
+    <div className="medication-view">
+      <div className="left-panel">
         {/* Search bar */}
         <input
           type="text"
@@ -79,31 +79,33 @@ const AllMedication = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-
+  
         {/* List of Medication */}
         <div className="medication-list">
           {filteredMedication.map((medication) => (
             <div key={medication.id} className="medication-box" onClick={() => handleMedicationClick(medication)}>
               <h3>{medication.name}</h3>
-              <p>{medication.description}</p>
             </div>
           ))}
         </div>
       </div>
-
+  
       <div className="right-panel">
         {/* Display selected medication details */}
         {selectedMedication ? (
           <div className="medication-details">
             <h2>{selectedMedication.name}</h2>
-            <p>{selectedMedication.details}</p>
+            <p>Intended use: {selectedMedication.intended_use}</p>
+            <p>Dosage: {selectedMedication.dosage}</p>
+            <p>Frequency: {selectedMedication.frequency} times a day</p>
+            <p>Duration: {selectedMedication.duration} days</p>
           </div>
         ) : (
           <div className="medication-placeholder">Select a medication to see details.</div>
         )}
       </div>
-  </div>
-};
+    </div>
+  );};
 
 // Template for Calendar view
 const CalendarView = () => (
