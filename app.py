@@ -5,6 +5,8 @@ from mongoengine import DoesNotExist, ValidationError
 from models import *
 import certifi
 import json
+import google.generativeai as genai
+import os
 
 
 app = Flask(__name__)
@@ -401,3 +403,19 @@ def delete_past_medical_test(user_id):
         return jsonify({"error": f"No user found with user_id: {user_id}"}), 404
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+# API Route for getting Gemini response based on user input
+@app.route("/api/gemini", methods=["POST"])
+def get_gemini_response():
+    data = request.get_json()
+    user_input = data.get("user_input")
+    if not user_input:
+        return jsonify({"error": "Missing user_input in request body"}), 400
+    
+    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(user_input).text
+    if not isinstance(response, dict):
+        response = str(response)
+    print(response)
+    return jsonify({"response": response}), 200
