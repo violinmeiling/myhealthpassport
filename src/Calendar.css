@@ -1,0 +1,31 @@
+.weekly-calendar {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .calendar-table th,
+  .calendar-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  
+  .medication-cell {
+    padding: 5px;
+  }
+  
+  .medication-schedule {
+    margin: 2px 0;
+  }
+  
+  .empty-cell {
+    height: 40px;
+    background-color: #f9f9f9;
+  }
+  

@@ -1,0 +1,51 @@
+/* App.css */
+.App {
+    text-align: center;
+  }
+  
+  .tab-content {
+    margin-top: 210px; /* Adjust this value to the combined height of Healthpass and Navbar */
+  }
+  
+  .healthpass {
+    background-color: #f8f9fa;
+    padding: 150px;
+  }
+  
+  .navbar {
+    background-color: #007bff;
+    color: white;
+    padding: 150px;
+  }
+
+button {
+  background-color: #2023b0;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+button:hover {
+  background-color: #1c439d;
+}
+
+.insurance-container {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+  padding: 10px;
+  transition: max-height 0.3s ease; /* Smooth transition */
+}
+
+.insurance-content {
+  max-height: 0; /* Initially collapsed */
+  overflow: hidden; /* Hide overflow */
+  transition: max-height 0.3s ease; /* Smooth transition */
+}
+
+.insurance-content.expanded {
+  max-height: 500px; /* Set a max height that can accommodate the expanded content */
+}
+
+  
