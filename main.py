@@ -8,7 +8,7 @@ import json
 
 #mongosh "mongodb+srv://healthpassport.wdswq.mongodb.net/" --apiVersion 1 --username violinmeiling
 
-uri = "mongodb+srv://violinmeiling:mathur@healthpassport.wdswq.mongodb.net/?retryWrites=true&w=majority&appName=healthpassport"
+uri;
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 # Send a ping to confirm a successful connection
