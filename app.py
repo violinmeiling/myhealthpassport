@@ -12,7 +12,6 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
-app.config['MONGO_URI'] = "mongodb+srv://violinmeiling:mathur@healthpassport.wdswq.mongodb.net/?retryWrites=true&w=majority&appName=healthpassport"
 # Create a new client and connect to the server
 connect(db="healthpassport", host=app.config['MONGO_URI'])
 
